@@ -8,11 +8,11 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name="books")
 public class Book {
 
@@ -24,8 +24,8 @@ public class Book {
     @Column(name="name")
     private String name;
 
-    @Column(name="stock_quantity")
-    private int stockQuantity;
+    @Column(name="available_quantity")
+    private int availableQuantity;
 
     @Column(name="inventory_quantity")
     private int inventoryQuantity;

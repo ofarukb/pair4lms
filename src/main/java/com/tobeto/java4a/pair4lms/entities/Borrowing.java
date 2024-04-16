@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,14 +24,14 @@ public class Borrowing {
     private int id;
 
     @Column(name="borrow_date")
-    private LocalDateTime borrowDate;
+    private LocalDate borrowDate;
 
     @Column(name="due_date")
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Nullable
     @Column(name="return_date")
-    private LocalDateTime returnDate;
+    private LocalDate returnDate;
 
     @ManyToOne
     @JoinColumn(name = "book_id")

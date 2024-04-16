@@ -1,6 +1,5 @@
-package com.tobeto.java4a.pair4lms.entities;
+package com.tobeto.java4a.pair4lms.services.dtos.responses.fines;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,22 +7,12 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="fines")
-public class Fine {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+public class AddFineResponse {
     private int id;
-
-    @Column(name="daily_amount")
     private double dailyAmount;
-
-    @Column(name="created_at")
     private LocalDate createdAt;
 }

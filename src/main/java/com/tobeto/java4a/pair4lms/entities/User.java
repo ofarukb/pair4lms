@@ -27,6 +27,9 @@ public class User {
     @Column(name="lastname")
     private String lastName;
 
+    @Column(name="phone")
+    private String phone;
+
     @OneToMany(mappedBy = "user")
     private List<Borrowing> borrowings;
 }
