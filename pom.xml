@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-			<version>3.2.4</version>
+			<version>3.2.4</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>${org.projectlombok.version}</version>
+			<version>${org.projectlombok.version}</version><!--$NO-MVN-MAN-VER$-->
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -69,7 +69,6 @@
 		</dependency>
 	</dependencies>
 
-	<!-- BOILERPLATE => BASMAKALIP -->
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -102,5 +101,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<!-- Plugin -->
 </project>
