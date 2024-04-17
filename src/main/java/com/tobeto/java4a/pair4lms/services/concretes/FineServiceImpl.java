@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-
 public class FineServiceImpl implements FineService {
 
     private FineRepository fineRepository;

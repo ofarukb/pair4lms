@@ -1,6 +1,8 @@
 package com.tobeto.java4a.pair4lms.services.concretes;
 
 
+import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
+import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.repositories.UserRepository;
 import com.tobeto.java4a.pair4lms.services.abstracts.UserService;
@@ -59,4 +61,10 @@ public class UserServiceImpl implements UserService {
     public void delete(int id) {
         userRepository.deleteById(id);
     }
+
+
+    public User getByUserId(int id){
+        return userRepository.findById(id).orElseThrow(() -> new BusinessException(id + " ID'sine sahip bir kullanıcı bulunamadı."));
+    }
 }
+

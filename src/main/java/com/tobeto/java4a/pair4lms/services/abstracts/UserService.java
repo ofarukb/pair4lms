@@ -1,5 +1,6 @@
 package com.tobeto.java4a.pair4lms.services.abstracts;
 
+import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.users.AddUserRequest;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.users.UpdateUserRequest;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.users.AddUserResponse;
@@ -14,4 +15,5 @@ public interface UserService {
     List<ListUserResponse> getAll();
     ListUserResponse getById(int id);
     void delete(int id);
+    User getByUserId(int id);
 }

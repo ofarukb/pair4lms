@@ -19,7 +19,7 @@ public class UpdateBookRequest {
     private int id;
     @NotBlank(message = "Kitap ismi boş bırakılamaz.")
     @Size(min = 2, max = 100, message = "Kitap ismi 2 ile 100 karakter arasında olmalıdır.")
-    private int name;
+    private String name;
     @Min(value = 0, message = "Mevcut kitap miktarı negatif değer alamaz.")
     private int availableQuantity;
     @Positive(message = "Envanter miktarı 0'dan küçük olamaz.")
