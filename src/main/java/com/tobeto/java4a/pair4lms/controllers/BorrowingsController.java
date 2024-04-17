@@ -2,7 +2,9 @@ package com.tobeto.java4a.pair4lms.controllers;
 
 import com.tobeto.java4a.pair4lms.services.abstracts.BorrowingService;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.AddBorrowingRequest;
+import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.ReturnBookRequest;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.AddBorrowingResponse;
+import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ReturnBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListBorrowingResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,5 +34,10 @@ public class BorrowingsController {
     @GetMapping("/{id}")
     public ListBorrowingResponse getById(@PathVariable int id) {
         return borrowingService.getById(id);
+    }
+
+    @PostMapping("/return-book")
+    public ReturnBookResponse returnBook(@RequestBody @Valid ReturnBookRequest request) {
+        return borrowingService.returnBook(request);
     }
 }
