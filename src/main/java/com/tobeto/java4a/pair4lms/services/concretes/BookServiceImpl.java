@@ -21,8 +21,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public AddBookResponse add(AddBookRequest request) {
-        //Book book = BookMapper
-        return null;
+        Book book = BookMapper.INSTANCE.bookFromAddRequest(request);
+        book = bookRepository.save(book);
+
+        return BookMapper.INSTANCE.addResponseFromBook(book);
     }
 
     @Override

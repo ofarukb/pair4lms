@@ -9,8 +9,6 @@ import com.tobeto.java4a.pair4lms.services.dtos.responses.books.UpdateBookRespon
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-
-
 @Mapper
 public interface BookMapper {
 
