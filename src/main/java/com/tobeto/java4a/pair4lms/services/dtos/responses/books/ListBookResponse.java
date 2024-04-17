@@ -13,4 +13,6 @@ public class ListBookResponse {
     private int id;
     private String name;
     private int availableQuantity;
+    private String authorFirstName;
+    private String authorLastName;
 }

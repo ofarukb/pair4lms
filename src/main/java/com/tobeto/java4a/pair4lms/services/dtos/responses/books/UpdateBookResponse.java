@@ -14,4 +14,6 @@ public class UpdateBookResponse {
     private String name;
     private int availableQuantity;
     private int inventoryQuantity;
+    private String authorFirstName;
+    private String authorLastName;
 }

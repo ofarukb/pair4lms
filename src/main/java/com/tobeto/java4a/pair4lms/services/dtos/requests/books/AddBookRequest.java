@@ -22,4 +22,7 @@ public class AddBookRequest {
     private int availableQuantity;
     @Positive(message = "Envanter miktarı 0'dan küçük olamaz.")
     private int inventoryQuantity;
+    @Min(value = 1, message = "Geçerli bir yazar ID'si belirtin.")
+    private int authorId;
+
 }

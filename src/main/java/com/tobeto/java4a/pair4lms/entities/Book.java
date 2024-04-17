@@ -32,4 +32,8 @@ public class Book {
 
     @OneToMany(mappedBy = "book")
     private List<Borrowing> borrowings;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 }
