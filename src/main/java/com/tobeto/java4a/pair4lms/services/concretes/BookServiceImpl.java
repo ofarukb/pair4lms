@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import com.tobeto.java4a.pair4lms.services.mappers.BookMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,28 +23,38 @@ public class BookServiceImpl implements BookService {
     @Override
     public AddBookResponse add(AddBookRequest request) {
         Book book = BookMapper.INSTANCE.bookFromAddRequest(request);
-        book = bookRepository.save(book);
+        Book savedBook = bookRepository.save(book);
 
-        return BookMapper.INSTANCE.addResponseFromBook(book);
+        return BookMapper.INSTANCE.addResponseFromBook(savedBook);
     }
 
     @Override
     public UpdateBookResponse update(UpdateBookRequest request) {
-        return null;
+        Book book = BookMapper.INSTANCE.bookFromUpdateRequest(request);
+        Book savedBook = bookRepository.save(book);
+
+        return BookMapper.INSTANCE.updateResponseFromBook(savedBook);
     }
 
     @Override
     public List<ListBookResponse> getAll() {
-        return null;
+        List<Book> bookList = bookRepository.findAll();
+        List<ListBookResponse> response = new ArrayList<>();
+        for (Book book : bookList) {
+            response.add(BookMapper.INSTANCE.listResponseFromBook(book));
+        }
+        return response;
     }
 
     @Override
     public ListBookResponse getById(int id) {
-        return null;
+        Book book = bookRepository.findById(id).orElse(null);
+
+        return BookMapper.INSTANCE.listResponseFromBook(book);
     }
 
     @Override
     public void delete(int id) {
-
+        bookRepository.deleteById(id);
     }
 }
