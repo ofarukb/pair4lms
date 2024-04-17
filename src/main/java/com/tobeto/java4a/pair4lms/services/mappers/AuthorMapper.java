@@ -7,20 +7,24 @@ import com.tobeto.java4a.pair4lms.services.dtos.responses.authors.AddAuthorRespo
 import com.tobeto.java4a.pair4lms.services.dtos.responses.authors.ListAuthorResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.authors.UpdateAuthorResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface AuthorMapper {
 
-    AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
+	AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 
-    Author authorFromAddRequest(AddAuthorRequest request);
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "books", ignore = true)
+	Author authorFromAddRequest(AddAuthorRequest request);
 
-    AddAuthorResponse addResponseFromAuthor(Author author);
+	AddAuthorResponse addResponseFromAuthor(Author author);
 
-    Author authorFromUpdateRequest(UpdateAuthorRequest request);
+	@Mapping(target = "books", ignore = true)
+	Author authorFromUpdateRequest(UpdateAuthorRequest request);
 
-    UpdateAuthorResponse updateResponseFromAuthor(Author author);
+	UpdateAuthorResponse updateResponseFromAuthor(Author author);
 
-    ListAuthorResponse listResponseFromAuthor(Author author);
+	ListAuthorResponse listResponseFromAuthor(Author author);
 }

@@ -11,23 +11,27 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface BorrowingMapper {
 
-    BorrowingMapper INSTANCE = Mappers.getMapper(BorrowingMapper.class);
+	BorrowingMapper INSTANCE = Mappers.getMapper(BorrowingMapper.class);
 
-    @Mapping(target = "book.id", source = "bookId")
-    @Mapping(target = "user.id", source = "userId")
-    Borrowing borrowingFromAddRequest(AddBorrowingRequest request);
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "borrowDate", ignore = true)
+	@Mapping(target = "dueDate", ignore = true)
+	@Mapping(target = "returnDate", ignore = true)
+	@Mapping(target = "book.id", source = "bookId")
+	@Mapping(target = "user.id", source = "userId")
+	Borrowing borrowingFromAddRequest(AddBorrowingRequest request);
 
-    @Mapping(target = "bookId", source = "book.id")
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userFirstName", source = "user.firstName")
-    @Mapping(target = "userLastName", source = " user.lastName")
-    @Mapping(target = "bookName", source = "book.name")
-    AddBorrowingResponse addResponseFromBorrowing(Borrowing borrowing);
+	@Mapping(target = "bookId", source = "book.id")
+	@Mapping(target = "userId", source = "user.id")
+	@Mapping(target = "userFirstName", source = "user.firstName")
+	@Mapping(target = "userLastName", source = "user.lastName")
+	@Mapping(target = "bookName", source = "book.name")
+	AddBorrowingResponse addResponseFromBorrowing(Borrowing borrowing);
 
-    @Mapping(target = "bookId", source = "book.id")
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userFirstName", source = "user.firstName")
-    @Mapping(target = "userLastName", source = " user.lastName")
-    @Mapping(target = "bookName", source = "book.name")
-    ListBorrowingResponse listResponseFromBorrowing(Borrowing borrowing);
+	@Mapping(target = "bookId", source = "book.id")
+	@Mapping(target = "userId", source = "user.id")
+	@Mapping(target = "userFirstName", source = "user.firstName")
+	@Mapping(target = "userLastName", source = "user.lastName")
+	@Mapping(target = "bookName", source = "book.name")
+	ListBorrowingResponse listResponseFromBorrowing(Borrowing borrowing);
 }

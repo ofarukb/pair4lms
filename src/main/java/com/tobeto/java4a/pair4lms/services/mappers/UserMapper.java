@@ -7,21 +7,25 @@ import com.tobeto.java4a.pair4lms.services.dtos.responses.users.AddUserResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.users.ListUserResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.users.UpdateUserResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    User userFromAddRequest(AddUserRequest request);
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "borrowings", ignore = true)
+	User userFromAddRequest(AddUserRequest request);
 
-    AddUserResponse addResponseFromUser(User user);
+	AddUserResponse addResponseFromUser(User user);
 
-    User userFromUpdateRequest(UpdateUserRequest request);
+	@Mapping(target = "borrowings", ignore = true)
+	User userFromUpdateRequest(UpdateUserRequest request);
 
-    UpdateUserResponse updateResponseFromUser(User user);
+	UpdateUserResponse updateResponseFromUser(User user);
 
-    ListUserResponse listResponseFromUser(User user);
+	ListUserResponse listResponseFromUser(User user);
 
 }

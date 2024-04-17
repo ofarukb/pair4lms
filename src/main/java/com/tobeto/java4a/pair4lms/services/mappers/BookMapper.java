@@ -7,20 +7,32 @@ import com.tobeto.java4a.pair4lms.services.dtos.responses.books.AddBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.books.ListBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.books.UpdateBookResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface BookMapper {
 
-    BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
+	BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
-    Book bookFromAddRequest(AddBookRequest request);
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "borrowings", ignore = true)
+	@Mapping(target = "author.id", source = "authorId")
+	Book bookFromAddRequest(AddBookRequest request);
 
-    AddBookResponse addResponseFromBook(Book book);
+	@Mapping(target = "authorFirstName", source = "author.firstName")
+	@Mapping(target = "authorLastName", source = "author.lastName")
+	AddBookResponse addResponseFromBook(Book book);
 
-    Book bookFromUpdateRequest(UpdateBookRequest request);
+	@Mapping(target = "borrowings", ignore = true)
+	@Mapping(target = "author.id", source = "authorId")
+	Book bookFromUpdateRequest(UpdateBookRequest request);
 
-    UpdateBookResponse updateResponseFromBook(Book book);
+	@Mapping(target = "authorFirstName", source = "author.firstName")
+	@Mapping(target = "authorLastName", source = "author.lastName")
+	UpdateBookResponse updateResponseFromBook(Book book);
 
-    ListBookResponse listResponseFromBook(Book book);
+	@Mapping(target = "authorFirstName", source = "author.firstName")
+	@Mapping(target = "authorLastName", source = "author.lastName")
+	ListBookResponse listResponseFromBook(Book book);
 }
