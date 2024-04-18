@@ -4,7 +4,6 @@ package com.tobeto.java4a.pair4lms.services.concretes;
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import com.tobeto.java4a.pair4lms.entities.Book;
 import com.tobeto.java4a.pair4lms.entities.Borrowing;
-import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.repositories.BookRepository;
 import com.tobeto.java4a.pair4lms.repositories.BorrowingRepository;
 import com.tobeto.java4a.pair4lms.repositories.FineRepository;
@@ -46,7 +45,14 @@ public class BorrowingServiceImpl implements BorrowingService {
         bookShouldBeAvailable(book.getAvailableQuantity());
 
         Borrowing borrowing = BorrowingMapper.INSTANCE.borrowingFromAddRequest(request);
+
+        borrowing.setBorrowDate(LocalDate.now());
+
+        LocalDate dueDate = LocalDate.now().plusDays(MAX_BORROWING_INTERVAL_IN_DAYS);
+        borrowing.setDueDate(dueDate);
+
         Borrowing savedBorrowing = borrowingRepository.save(borrowing);
+
         book.setAvailableQuantity(book.getAvailableQuantity() - DEFAULT_QUANTITY);
         bookRepository.save(book);
 
@@ -71,30 +77,59 @@ public class BorrowingServiceImpl implements BorrowingService {
 
     @Override
     public ReturnBookResponse returnBook(ReturnBookRequest request) {
-        User user = userService.getByUserId(request.getUserId());
-        Book book = bookService.getByBookId(request.getBookId());
-        //Borrowing borrowing=borrowingRepository.findById()
-        Borrowing borrowingToBeSaved = BorrowingMapper.INSTANCE.borrowingFromReturnBookRequest(request);
+        int userId = request.getUserId();
+        int bookId = request.getBookId();
+
+        // Kullanıcı ve Kitap bilgilerini al
+        userService.getByUserId(userId);
+        Book book = bookService.getByBookId(bookId);
+
+        // Ödünç alma kaydını bul
+        Borrowing borrowingToBeSaved = borrowingRepository.findByUserIdAndBookId(userId, bookId);
+
+        validateBorrowingForReturn(borrowingToBeSaved);
+
+        // İlgili ödünç alma kaydını güncelle (iade işlemi)
         borrowingToBeSaved.setReturnDate(LocalDate.now());
-        //borrowing.setDueDate(borrowingRepository.fi);
+
         Borrowing savedBorrowing = borrowingRepository.save(borrowingToBeSaved);
         book.setAvailableQuantity(book.getAvailableQuantity() + DEFAULT_QUANTITY);
         bookRepository.save(book);
 
-        ReturnBookResponse returnBookResponse = BorrowingMapper.INSTANCE.returnBookResponseFromBorrowing(savedBorrowing);
-        if (borrowingToBeSaved.getDueDate().isBefore(borrowingToBeSaved.getReturnDate())) {
-            long differenceInDays = ChronoUnit.DAYS.between(borrowingToBeSaved.getDueDate(), borrowingToBeSaved.getReturnDate());
+        // Gecikme ücretini hesapla
+        double fineAmount = calculateLateFine(borrowingToBeSaved);
+
+        // ReturnBookResponse oluştur ve doldur
+        ReturnBookResponse response = BorrowingMapper.INSTANCE.returnBookResponseFromBorrowing(savedBorrowing);
+        response.setTotalFineAmount(fineAmount);
+
+        return response;
+    }
+
+    private double calculateLateFine(Borrowing borrowing) {
+        LocalDate dueDate = borrowing.getDueDate();
+        LocalDate returnDate = borrowing.getReturnDate();
+
+        if (dueDate.isBefore(returnDate)) {
+            long differenceInDays = ChronoUnit.DAYS.between(dueDate,returnDate);
             double dailyAmount = fineRepository.findCurrentFineAmount().getDailyAmount();
-            double totalFineAmount = differenceInDays * dailyAmount;
-            returnBookResponse.setTotalFineAmount(totalFineAmount);
+            return differenceInDays * dailyAmount;
         }
 
-        return returnBookResponse;
+        return 0.0;
+    }
+
+    private void validateBorrowingForReturn(Borrowing borrowing) {
+        if (borrowing == null) {
+            throw new BusinessException("Verilen kullanıcı ve kitaba ait iade edilmemiş ödünç alma kaydı bulunamadı.");
+        }
+
+        if (borrowing.getReturnDate() != null) {
+            throw new BusinessException("Bu kitap zaten iade edilmiş.");
+        }
     }
 
     private void bookShouldBeAvailable(int availableQuantity) {
         if (availableQuantity < DEFAULT_QUANTITY) throw new BusinessException("Bu kitap stokta mevcut değildir.");
     }
-
-
 }

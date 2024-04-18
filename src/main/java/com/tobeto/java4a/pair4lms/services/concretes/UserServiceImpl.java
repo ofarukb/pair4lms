@@ -3,7 +3,6 @@ package com.tobeto.java4a.pair4lms.services.concretes;
 
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import com.tobeto.java4a.pair4lms.entities.User;
-import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.repositories.UserRepository;
 import com.tobeto.java4a.pair4lms.services.abstracts.UserService;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.users.AddUserRequest;
@@ -52,8 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ListUserResponse getById(int id) {
-        User user = userRepository.findById(id).orElse(null);
-
+        User user =  getByUserId(id);
         return UserMapper.INSTANCE.listResponseFromUser(user);
     }
 

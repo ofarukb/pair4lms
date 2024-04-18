@@ -9,6 +9,8 @@ import com.tobeto.java4a.pair4lms.services.mappers.FineMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 public class FineServiceImpl implements FineService {
@@ -18,6 +20,7 @@ public class FineServiceImpl implements FineService {
     @Override
     public AddFineResponse add(AddFineRequest request) {
         Fine fine = FineMapper.INSTANCE.fineFromAddRequest(request);
+        fine.setCreatedAt(LocalDate.now());
         Fine savedFine = fineRepository.save(fine);
 
         return FineMapper.INSTANCE.addResponseFromFine(savedFine);
