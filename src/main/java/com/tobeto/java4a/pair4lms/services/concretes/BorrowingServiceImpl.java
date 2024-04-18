@@ -3,6 +3,7 @@ package com.tobeto.java4a.pair4lms.services.concretes;
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import com.tobeto.java4a.pair4lms.entities.Book;
 import com.tobeto.java4a.pair4lms.entities.Borrowing;
+import com.tobeto.java4a.pair4lms.entities.User;
 import com.tobeto.java4a.pair4lms.repositories.BookRepository;
 import com.tobeto.java4a.pair4lms.repositories.BorrowingRepository;
 import com.tobeto.java4a.pair4lms.repositories.FineRepository;
@@ -14,12 +15,14 @@ import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.ReturnBookRe
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.AddBorrowingResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ReturnBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListBorrowingResponse;
+import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListFinedUserResponse;
 import com.tobeto.java4a.pair4lms.services.mappers.BorrowingMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +41,14 @@ public class BorrowingServiceImpl implements BorrowingService {
 
 	@Override
 	public AddBorrowingResponse add(AddBorrowingRequest request) {
-		userService.getByUserId(request.getUserId());
-		Book book = bookService.getByBookId(request.getBookId());
+		int userId = request.getUserId();
+		int bookId = request.getBookId();
+
+		User user = userService.getByUserId(userId);
+		Book book = bookService.getByBookId(bookId);
 
 		bookShouldBeAvailable(book.getAvailableQuantity());
+		sameBookShouldNotBeBorrowedBeforeReturning(userId, bookId);
 
 		Borrowing borrowing = BorrowingMapper.INSTANCE.borrowingFromAddRequest(request);
 
@@ -55,6 +62,8 @@ public class BorrowingServiceImpl implements BorrowingService {
 		book.setAvailableQuantity(book.getAvailableQuantity() - DEFAULT_QUANTITY);
 		bookRepository.save(book);
 
+		savedBorrowing.setBook(book);
+		savedBorrowing.setUser(user);
 		return BorrowingMapper.INSTANCE.addResponseFromBorrowing(savedBorrowing);
 	}
 
@@ -103,9 +112,37 @@ public class BorrowingServiceImpl implements BorrowingService {
 		return response;
 	}
 
+	@Override
+	public List<ListFinedUserResponse> getFinedUsers() {
+		List<ListFinedUserResponse> response = new ArrayList<ListFinedUserResponse>();
+
+		List<Borrowing> finedBorrowings = borrowingRepository.findFinedBorrowings();
+
+//		Map<Integer, Double> finedList = finedBorrowings.stream().collect(Collectors
+//		.groupingBy(borrowing -> borrowing.getUser().getId(), Collectors.summingDouble(this::calculateFine)));
+
+		List<Integer> userIds = finedBorrowings.stream().map(borrowing -> borrowing.getUser().getId()).distinct()
+				.toList();
+
+		for (Integer userId : userIds) {
+			List<Borrowing> borrowingsOfUser = finedBorrowings.stream()
+					.filter(borrowing -> borrowing.getUser().getId() == userId).toList();
+			double totalFineAmountOfUser = 0;
+			for (Borrowing borrowing : borrowingsOfUser) {
+				totalFineAmountOfUser += calculateFine(borrowing);
+			}
+			ListFinedUserResponse finedUserResponse = BorrowingMapper.INSTANCE
+					.listFinedUserResponseFromBorrowing(borrowingsOfUser.get(0));
+			finedUserResponse.setTotalFineAmount(totalFineAmountOfUser);
+			response.add(finedUserResponse);
+		}
+
+		return response;
+	}
+
 	private double calculateFine(Borrowing borrowing) {
 		LocalDate dueDate = borrowing.getDueDate();
-		LocalDate returnDate = borrowing.getReturnDate();
+		LocalDate returnDate = borrowing.getReturnDate() == null ? LocalDate.now() : borrowing.getReturnDate();
 
 		if (dueDate.isBefore(returnDate)) {
 			long differenceInDays = ChronoUnit.DAYS.between(dueDate, returnDate);
@@ -134,5 +171,12 @@ public class BorrowingServiceImpl implements BorrowingService {
 	private Borrowing getByBorrowingId(int id) {
 		return borrowingRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(id + " ID'sine sahip bir ödünç alma işlemi bulunamadı."));
+	}
+
+	private void sameBookShouldNotBeBorrowedBeforeReturning(int userId, int bookId) {
+		Borrowing borrowingToBeSaved = borrowingRepository.findByUserIdAndBookId(userId, bookId);
+		if (borrowingToBeSaved != null && borrowingToBeSaved.getReturnDate() == null) {
+			throw new BusinessException("Bu kitap için ödünç kaydınız mevcut. Yeniden kayıt açılamaz.");
+		}
 	}
 }

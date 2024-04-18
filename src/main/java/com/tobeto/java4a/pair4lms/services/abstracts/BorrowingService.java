@@ -5,6 +5,7 @@ import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.ReturnBookRe
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.AddBorrowingResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ReturnBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListBorrowingResponse;
+import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListFinedUserResponse;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface BorrowingService {
     ListBorrowingResponse getById(int id);
     List<ListBorrowingResponse> getByUserId(int userId);
     ReturnBookResponse returnBook(ReturnBookRequest request);
+    List<ListFinedUserResponse> getFinedUsers();
 }

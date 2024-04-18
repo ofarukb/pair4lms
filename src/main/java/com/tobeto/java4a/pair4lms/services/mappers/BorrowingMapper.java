@@ -5,6 +5,7 @@ import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.AddBorrowing
 import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.ReturnBookRequest;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.AddBorrowingResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListBorrowingResponse;
+import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListFinedUserResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ReturnBookResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -36,6 +37,13 @@ public interface BorrowingMapper {
 	@Mapping(target = "userLastName", source = "user.lastName")
 	@Mapping(target = "bookName", source = "book.name")
 	ListBorrowingResponse listResponseFromBorrowing(Borrowing borrowing);
+	
+	@Mapping(target = "totalFineAmount", ignore = true)
+	@Mapping(target = "userId", source = "user.id")
+	@Mapping(target = "userFirstName", source = "user.firstName")
+	@Mapping(target = "userLastName", source = "user.lastName")
+	@Mapping(target = "userPhone", source = "user.phone")
+	ListFinedUserResponse listFinedUserResponseFromBorrowing(Borrowing borrowing);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "borrowDate", ignore = true)
@@ -45,6 +53,7 @@ public interface BorrowingMapper {
 	@Mapping(target = "user.id", source = "userId")
 	Borrowing borrowingFromReturnBookRequest(ReturnBookRequest request);
 
+	@Mapping(target = "totalFineAmount", ignore = true)
 	@Mapping(target = "bookId", source = "book.id")
 	@Mapping(target = "userId", source = "user.id")
 	@Mapping(target = "userFirstName", source = "user.firstName")

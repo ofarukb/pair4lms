@@ -6,6 +6,8 @@ import com.tobeto.java4a.pair4lms.services.dtos.requests.borrowings.ReturnBookRe
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.AddBorrowingResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ReturnBookResponse;
 import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListBorrowingResponse;
+import com.tobeto.java4a.pair4lms.services.dtos.responses.borrowings.ListFinedUserResponse;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,11 @@ public class BorrowingsController {
     @GetMapping("/get-by-user-id/{userId}")
     public List<ListBorrowingResponse> getByUserId(@PathVariable int userId) {
         return borrowingService.getByUserId(userId);
+    }
+    
+    @GetMapping("/get-fined-users")
+    public List<ListFinedUserResponse> getFinedUsers() {
+        return borrowingService.getFinedUsers();
     }
 
     @GetMapping("/{id}")
