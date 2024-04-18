@@ -3,6 +3,7 @@ package com.tobeto.java4a.pair4lms.services.concretes;
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import com.tobeto.java4a.pair4lms.entities.Book;
 import com.tobeto.java4a.pair4lms.repositories.BookRepository;
+import com.tobeto.java4a.pair4lms.services.abstracts.AuthorService;
 import com.tobeto.java4a.pair4lms.services.abstracts.BookService;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.books.AddBookRequest;
 import com.tobeto.java4a.pair4lms.services.dtos.requests.books.UpdateBookRequest;
@@ -13,17 +14,18 @@ import lombok.AllArgsConstructor;
 import com.tobeto.java4a.pair4lms.services.mappers.BookMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
+    private AuthorService authorService;
 
     @Override
     public AddBookResponse add(AddBookRequest request) {
+        authorService.getByAuthorId(request.getAuthorId());
         Book book = BookMapper.INSTANCE.bookFromAddRequest(request);
         Book savedBook = bookRepository.save(book);
 
@@ -33,6 +35,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public UpdateBookResponse update(UpdateBookRequest request) {
         getByBookId(request.getId());
+        authorService.getByAuthorId(request.getAuthorId());
         Book bookToBeSaved = BookMapper.INSTANCE.bookFromUpdateRequest(request);
         Book savedBook = bookRepository.save(bookToBeSaved);
 
@@ -42,11 +45,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<ListBookResponse> getAll() {
         List<Book> bookList = bookRepository.findAll();
-        List<ListBookResponse> response = new ArrayList<>();
-        for (Book book : bookList) {
-            response.add(BookMapper.INSTANCE.listResponseFromBook(book));
-        }
-        return response;
+        return bookList.stream()
+                .map(BookMapper.INSTANCE::listResponseFromBook)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -60,6 +61,7 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
+    @Override
     public Book getByBookId(int id) {
         return bookRepository.findById(id).orElseThrow(() -> new BusinessException(id + " ID'sine sahip bir kitap bulunamadı."));
     }

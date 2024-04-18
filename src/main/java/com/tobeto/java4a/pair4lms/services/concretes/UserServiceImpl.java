@@ -14,8 +14,8 @@ import com.tobeto.java4a.pair4lms.services.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,11 +42,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ListUserResponse> getAll() {
         List<User> userList = userRepository.findAll();
-        List<ListUserResponse> response = new ArrayList<>();
-        for (User user : userList) {
-            response.add(UserMapper.INSTANCE.listResponseFromUser(user));
-        }
-        return response;
+        return userList.stream()
+                .map(UserMapper.INSTANCE::listResponseFromUser)
+                .collect(Collectors.toList());
     }
 
     @Override

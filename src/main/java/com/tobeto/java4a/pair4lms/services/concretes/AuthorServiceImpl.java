@@ -13,8 +13,8 @@ import com.tobeto.java4a.pair4lms.services.mappers.AuthorMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -41,11 +41,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<ListAuthorResponse> getAll() {
         List<Author> authorList = authorRepository.findAll();
-        List<ListAuthorResponse> response = new ArrayList<>();
-        for (Author author : authorList) {
-            response.add(AuthorMapper.INSTANCE.listResponseFromAuthor(author));
-        }
-        return response;
+        return authorList.stream()
+                .map(AuthorMapper.INSTANCE::listResponseFromAuthor)
+                .collect(Collectors.toList());
     }
 
     @Override

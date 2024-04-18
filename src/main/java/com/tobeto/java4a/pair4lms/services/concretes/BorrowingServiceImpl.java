@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -61,18 +61,17 @@ public class BorrowingServiceImpl implements BorrowingService {
 
     @Override
     public ListBorrowingResponse getById(int id) {
-        Borrowing borrowing = borrowingRepository.findById(id).orElse(null);
+        Borrowing borrowing = getByBorrowingId(id);
         return BorrowingMapper.INSTANCE.listResponseFromBorrowing(borrowing);
     }
 
     @Override
     public List<ListBorrowingResponse> getByUserId(int userId) {
-        List<Borrowing> borrowings = borrowingRepository.findByUserId(userId);
-        List<ListBorrowingResponse> response = new ArrayList<>();
-        for (Borrowing borrowing : borrowings) {
-            response.add(BorrowingMapper.INSTANCE.listResponseFromBorrowing(borrowing));
-        }
-        return response;
+        userService.getByUserId(userId);
+        List<Borrowing> borrowingList = borrowingRepository.findByUserId(userId);
+        return borrowingList.stream()
+                .map(BorrowingMapper.INSTANCE::listResponseFromBorrowing)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -131,5 +130,9 @@ public class BorrowingServiceImpl implements BorrowingService {
 
     private void bookShouldBeAvailable(int availableQuantity) {
         if (availableQuantity < DEFAULT_QUANTITY) throw new BusinessException("Bu kitap stokta mevcut değildir.");
+    }
+
+    private Borrowing getByBorrowingId(int id){
+        return borrowingRepository.findById(id).orElseThrow(() -> new BusinessException(id + " ID'sine sahip bir ödünç alma işlemi bulunamadı."));
     }
 }
