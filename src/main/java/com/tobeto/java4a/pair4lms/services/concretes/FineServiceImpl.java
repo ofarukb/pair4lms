@@ -25,4 +25,9 @@ public class FineServiceImpl implements FineService {
 
         return FineMapper.INSTANCE.addResponseFromFine(savedFine);
     }
+
+    @Override
+    public Fine findCurrentFineAmount() {
+        return fineRepository.findCurrentFineAmount();
+    }
 }

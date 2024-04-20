@@ -66,4 +66,9 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(id + " ID'sine sahip bir kitap bulunamadı."));
 	}
+
+	@Override
+	public Book save(Book book) {
+		return bookRepository.save(book);
+	}
 }

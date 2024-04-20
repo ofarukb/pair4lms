@@ -16,4 +16,5 @@ public interface BookService {
     ListBookResponse getById(int id);
     void delete(int id);
     Book getByBookId(int id);
+    Book save(Book book);
 }
