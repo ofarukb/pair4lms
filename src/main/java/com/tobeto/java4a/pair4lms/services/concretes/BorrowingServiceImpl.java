@@ -86,7 +86,7 @@ public class BorrowingServiceImpl implements BorrowingService {
 
         userService.getByUserId(userId);
         Book book = bookService.getByBookId(bookId);
-        Borrowing borrowingToBeSaved = borrowingRepository.findByUserIdAndBookId(userId, bookId);
+        Borrowing borrowingToBeSaved = borrowingRepository.findFirstByUserIdAndBookIdOrderByBorrowDateDesc(userId, bookId);
 
         validateBorrowingForReturn(borrowingToBeSaved);
 
@@ -164,7 +164,7 @@ public class BorrowingServiceImpl implements BorrowingService {
     }
 
     private void sameBookShouldNotBeBorrowedBeforeReturning(int userId, int bookId) {
-        Borrowing borrowingToBeSaved = borrowingRepository.findByUserIdAndBookId(userId, bookId);
+        Borrowing borrowingToBeSaved = borrowingRepository.findFirstByUserIdAndBookIdOrderByBorrowDateDesc(userId, bookId);
         if (borrowingToBeSaved != null && borrowingToBeSaved.getReturnDate() == null) {
             throw new BusinessException("Bu kitap için ödünç kaydınız mevcut. Yeniden kayıt açılamaz.");
         }

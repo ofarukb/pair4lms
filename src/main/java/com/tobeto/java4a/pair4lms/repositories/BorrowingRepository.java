@@ -11,7 +11,7 @@ import java.util.List;
 public interface BorrowingRepository extends JpaRepository<Borrowing, Integer> {
     List<Borrowing> findByUserId(int userId);
 
-    Borrowing findByUserIdAndBookId(@Param("userId") int userId, @Param("bookId") int bookId);
+    Borrowing findFirstByUserIdAndBookIdOrderByBorrowDateDesc(int userId, int bookId);
     
     @Query("select b from Borrowing b where b.returnDate is null and b.dueDate < current_date")
     List<Borrowing> findFinedBorrowings();
