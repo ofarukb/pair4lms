@@ -5,7 +5,6 @@ import com.tobeto.java4a.pair4lms.core.utils.exceptions.problemdetails.BusinessP
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.problemdetails.ValidationProblemDetails;
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
