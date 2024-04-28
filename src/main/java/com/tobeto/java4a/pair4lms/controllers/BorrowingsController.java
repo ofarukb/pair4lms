@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/borrowings")
+@RequestMapping("/api/v1/borrowings")
 public class BorrowingsController {
 
     private BorrowingService borrowingService;

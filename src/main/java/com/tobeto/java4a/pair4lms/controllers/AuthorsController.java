@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/authors")
+@RequestMapping("/api/v1/authors")
 public class AuthorsController {
 
     private AuthorService authorService;

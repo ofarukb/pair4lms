@@ -1,5 +1,6 @@
 package com.tobeto.java4a.pair4lms.services.dtos.requests.users;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -29,4 +30,11 @@ public class UpdateUserRequest {
     @NotBlank(message = "Telefon numarası boş bırakılamaz.")
     @Pattern(regexp = "^$|[0-9]{10}", message = "Geçersiz telefon numarası formatı. Lütfen 10 haneli bir numara giriniz.")
     private String phone;
+    
+    @Email(message = "Lütfen geçerli bir e-posta adresi giriniz")
+	private String email;
+    
+    @NotBlank(message = "Şifre boş bırakılamaz")
+	@Size(min = 6, message = "Şifre en az 6 karakterden oluşmalıdır")
+	private String password;
 }

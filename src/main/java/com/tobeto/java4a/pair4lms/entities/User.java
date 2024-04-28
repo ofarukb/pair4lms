@@ -8,28 +8,68 @@ import lombok.Setter;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="users")
-public class User {
+@Table(name = "users")
+public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
-    @Column(name="firstname")
-    private String firstName;
+	@Column(name = "firstname")
+	private String firstName;
 
-    @Column(name="lastname")
-    private String lastName;
+	@Column(name = "lastname")
+	private String lastName;
 
-    @Column(name="phone")
-    private String phone;
+	@Column(name = "phone")
+	private String phone;
+	
+	private String email;
+	
+	private String password;
+	
+//	@JoinTable(name="roles", joinColumns = @JoinColumn(name="user_id"))
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private List<Role> authorities;
 
-    @OneToMany(mappedBy = "user")
-    private List<Borrowing> borrowings;
+	@OneToMany(mappedBy = "user")
+	private List<Borrowing> borrowings;
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/fines")
+@RequestMapping("/api/v1/fines")
 public class FinesController {
 
     private FineService fineService;
