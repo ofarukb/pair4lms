@@ -1,14 +1,18 @@
 package com.tobeto.java4a.pair4lms.services.concretes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tobeto.java4a.pair4lms.core.services.JwtService;
 import com.tobeto.java4a.pair4lms.core.utils.exceptions.types.BusinessException;
 import com.tobeto.java4a.pair4lms.entities.Role;
 import com.tobeto.java4a.pair4lms.entities.User;
@@ -29,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
+	private final JwtService jwtService;
 
 	@Override
 	public RegisterResponse register(RegisterRequest request) {
@@ -46,16 +51,21 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
-		User user = userService.getByEmail(request.getEmail())
-				.orElseThrow(() -> new BusinessException("Kullanıcı bulunamadı ya da şifre yanlış"));
+		try {
+			authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+		} catch (BadCredentialsException e) {
+			throw new BadCredentialsException("Kullanıcı bulunamadı ya da şifre yanlış", e.getCause());
+		}
 
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+		User user = userService.getByEmail(request.getEmail()).orElseThrow();
+		Map<String, Object> extraClaims = new HashMap<String, Object>();
+		extraClaims.put("userId", user.getId());
+		extraClaims.put("roles",
+				user.getAuthorities().stream().map((role) -> role.getAuthority()).collect(Collectors.toList()));
+		String token = jwtService.generateToken(user.getUsername(), extraClaims);
 
-		if (!authentication.isAuthenticated())
-			throw new BusinessException("Kullanıcı bulunamadı ya da şifre yanlış");
-
-		return UserMapper.INSTANCE.loginResponseFromUser(user);
+		return UserMapper.INSTANCE.loginResponseFromUser(user, token);
 	}
 
 	@Override

@@ -37,5 +37,5 @@ public interface UserMapper {
 
 	RegisterResponse registerResponseFromUser(User user);
 
-	LoginResponse loginResponseFromUser(User user);
+	LoginResponse loginResponseFromUser(User user, String token);
 }

@@ -5,6 +5,6 @@ public class AuthenticationProblemDetails extends ProblemDetails {
 	public AuthenticationProblemDetails(String detail) {
 		setDetail(detail);
         setTitle("Authentication Violation");
-        setType("BadCredentialsException");
+        setType("AuthenticationException");
 	}
 }
