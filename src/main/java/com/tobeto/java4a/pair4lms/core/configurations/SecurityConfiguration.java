@@ -27,7 +27,7 @@ public class SecurityConfiguration {
 	private final UserService userService;
 	private final JwtFilter jwtFilter;
 
-	private static final String[] WHITE_LIST_URLS = { "/swagger-ui/**", "/v3/api-docs", "/api/v1/auth/**" };
+	private static final String[] WHITE_LIST_URLS = { "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/auth/**" };
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
