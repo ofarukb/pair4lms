@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -15,10 +16,11 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-
-	private final long EXPIRATION = 600000;
-
-	private final String SECRET_KEY = "f56231f7213b369a9f9acb982fc4de9fbe1c8f53755ea9b990e47e94728b78c6ef8a143aba51daed7663792783693c76de21b6192da08ae6db19fb773e82b0a3";
+	@Value("${jwt.expiration}")
+	private long EXPIRATION;
+	
+	@Value("${jwt.key}")
+	private String SECRET_KEY;
 
 	public String generateToken(String userName, Map<String, Object> extraClaims) {
 		String token = Jwts
