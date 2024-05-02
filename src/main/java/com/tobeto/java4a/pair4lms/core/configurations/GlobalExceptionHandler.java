@@ -43,12 +43,6 @@ public class GlobalExceptionHandler {
         return new AuthenticationProblemDetails(exception.getMessage());
     }
 
-//	@ExceptionHandler({ AccessDeniedException.class })
-//	@ResponseStatus(HttpStatus.FORBIDDEN)
-//	public AuthenticationProblemDetails handleAccessDeniedException(AccessDeniedException exception) {
-//		return new AuthenticationProblemDetails(exception.getMessage());
-//	}
-
 	@ExceptionHandler({ JwtException.class })
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public AuthenticationProblemDetails handleExpiredJwtException(JwtException exception) {

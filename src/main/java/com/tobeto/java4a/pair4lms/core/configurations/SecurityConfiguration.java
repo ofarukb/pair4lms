@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.tobeto.java4a.pair4lms.core.filters.CustomAuthenticationEntryPoint;
 import com.tobeto.java4a.pair4lms.core.filters.JwtFilter;
 import com.tobeto.java4a.pair4lms.entities.Role;
 import com.tobeto.java4a.pair4lms.services.abstracts.UserService;
@@ -26,6 +27,7 @@ public class SecurityConfiguration {
 
 	private final UserService userService;
 	private final JwtFilter jwtFilter;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 	private static final String[] WHITE_LIST_URLS = { "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/auth/**" };
 
@@ -52,14 +54,15 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(AbstractHttpConfigurer::disable)
-		.authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URLS).permitAll()
-				.requestMatchers(HttpMethod.GET).authenticated()
-				.requestMatchers(HttpMethod.PUT, "/api/v1/**").hasAuthority(Role.ADMIN.name())
-				.requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasAuthority(Role.ADMIN.name())
-				.requestMatchers(HttpMethod.POST, "/api/v1/**").hasAuthority(Role.ADMIN.name())
-				.anyRequest().permitAll())
-		.httpBasic(AbstractHttpConfigurer::disable)
-		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+				.authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URLS).permitAll()
+						.requestMatchers(HttpMethod.GET).authenticated()
+						.requestMatchers(HttpMethod.PUT, "/api/v1/**").hasAuthority(Role.ADMIN.name())
+						.requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasAuthority(Role.ADMIN.name())
+						.requestMatchers(HttpMethod.POST, "/api/v1/**").hasAuthority(Role.ADMIN.name())
+						.anyRequest().permitAll())
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint))
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
