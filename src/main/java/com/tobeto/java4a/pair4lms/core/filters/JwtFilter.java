@@ -14,7 +14,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.tobeto.java4a.pair4lms.core.services.JwtService;
 import com.tobeto.java4a.pair4lms.entities.Role;
-import com.tobeto.java4a.pair4lms.services.abstracts.UserService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
 	private final JwtService jwtService;
 	private final HandlerExceptionResolver exceptionResolver;
 
-	public JwtFilter(JwtService jwtService, UserService userService,
+	public JwtFilter(JwtService jwtService,
 			@Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
 		this.jwtService = jwtService;
 		this.exceptionResolver = handlerExceptionResolver;

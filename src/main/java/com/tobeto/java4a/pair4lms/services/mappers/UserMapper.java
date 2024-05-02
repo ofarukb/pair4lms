@@ -20,11 +20,13 @@ public interface UserMapper {
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "borrowings", ignore = true)
+	@Mapping(target = "authorities", ignore = true)
 	User userFromAddRequest(AddUserRequest request);
 
 	AddUserResponse addResponseFromUser(User user);
 
 	@Mapping(target = "borrowings", ignore = true)
+	@Mapping(target = "authorities", ignore = true)
 	User userFromUpdateRequest(UpdateUserRequest request);
 
 	UpdateUserResponse updateResponseFromUser(User user);
@@ -33,6 +35,7 @@ public interface UserMapper {
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "borrowings", ignore = true)
+	@Mapping(target = "authorities", ignore = true)
 	User userFromRegisterRequest(RegisterRequest request);
 
 	RegisterResponse registerResponseFromUser(User user);
