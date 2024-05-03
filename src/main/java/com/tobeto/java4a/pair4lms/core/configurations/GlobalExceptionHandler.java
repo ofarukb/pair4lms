@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler({ JwtException.class })
 	@ResponseStatus(HttpStatus.FORBIDDEN)
-	public AuthenticationProblemDetails handleExpiredJwtException(JwtException exception) {
+	public AuthenticationProblemDetails handleJwtException(JwtException exception) {
 		return new AuthenticationProblemDetails(exception.getMessage());
 	}
 }
