@@ -28,6 +28,7 @@ public class SecurityConfiguration {
 	private final UserService userService;
 	private final JwtFilter jwtFilter;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	private static final String[] WHITE_LIST_URLS = { "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/auth/**" };
 
@@ -62,6 +63,7 @@ public class SecurityConfiguration {
 						.anyRequest().permitAll())
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint))
+				.exceptionHandling(e -> e.accessDeniedHandler(customAccessDeniedHandler))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
